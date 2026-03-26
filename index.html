@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>常用电路模块资料库</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --bg2: #eef2ff;
+      --card: #ffffff;
+      --line: #e2e8f0;
+      --muted: #64748b;
+      --text: #0f172a;
+      --soft: #f8fafc;
+      --primary: #0f172a;
+      --primary-2: #1e293b;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg) 0%, #ffffff 48%, var(--bg2) 100%);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero,
+    .content-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero {
+      grid-template-columns: 1.45fr 0.95fr;
+    }
+
+    .content-grid {
+      margin-top: 24px;
+      grid-template-columns: 0.95fr 1.45fr;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    .card-body { padding: 24px; }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .badge.dark { background: var(--primary); color: #fff; }
+    .badge.light { background: #e2e8f0; color: var(--text); }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      font-size: 48px;
+      line-height: 1.08;
+      margin: 12px 0 0;
+    }
+
+    .muted { color: var(--muted); }
+    .lead { font-size: 16px; line-height: 1.8; color: #475569; margin-top: 16px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      background: var(--soft);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .stat .label { font-size: 13px; color: var(--muted); }
+    .stat .value { font-size: 28px; font-weight: 700; margin-top: 6px; }
+
+    .list {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--soft);
+      border-radius: 16px;
+      padding: 12px 14px;
+      color: #334155;
+      font-size: 14px;
+    }
+
+    .section-title h3 { font-size: 20px; margin-bottom: 8px; }
+    .section-title p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    .tip-box {
+      margin-top: 18px;
+      border-radius: 16px;
+      border: 1px dashed #cbd5e1;
+      padding: 14px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search {
+      width: 100%;
+      height: 44px;
+      border-radius: 16px;
+      border: 1px solid #cbd5e1;
+      padding: 0 14px;
+      font-size: 14px;
+      outline: none;
+      margin-top: 18px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chip,
+    .ghost-btn,
+    .module-btn {
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .chip {
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: #334155;
+      padding: 8px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    .chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .ghost-btn {
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: var(--text);
+      border-radius: 16px;
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+
+    .ghost-btn:hover,
+    .chip:hover,
+    .module-btn:hover { transform: translateY(-1px); }
+
+    .module-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+      max-height: 560px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .module-btn {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 16px;
+      text-align: left;
+      width: 100%;
+    }
+
+    .module-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .module-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .module-name { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .module-summary { font-size: 14px; line-height: 1.6; color: var(--muted); }
+    .module-btn.active .module-summary { color: #cbd5e1; }
+    .module-level { margin-top: 10px; font-size: 12px; color: #94a3b8; }
+    .module-btn.active .module-level { color: #cbd5e1; }
+
+    .small-tag {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      white-space: nowrap;
+    }
+
+    .module-btn.active .small-tag {
+      border-color: rgba(255,255,255,0.25);
+      color: #fff;
+    }
+
+    .detail-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: 0.9fr 1.1fr;
+      margin-top: 24px;
+    }
+
+    .two-col {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 24px;
+    }
+
+    .inner-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 20px;
+    }
+
+    pre {
+      overflow-x: auto;
+      border-radius: 18px;
+      background: #020617;
+      color: #e2e8f0;
+      padding: 18px;
+      font-size: 14px;
+      line-height: 1.8;
+      margin: 16px 0 0;
+    }
+
+    .block-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .soft-block,
+    .formula-block {
+      background: var(--soft);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .formula-block { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+
+    .empty {
+      border-radius: 18px;
+      border: 1px dashed #cbd5e1;
+      background: var(--soft);
+      padding: 28px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .footer {
+      margin-top: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 1024px) {
+      .hero, .content-grid, .detail-grid, .two-col { grid-template-columns: 1fr; }
+      h1 { font-size: 34px; }
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 16px; }
+      .stats { grid-template-columns: 1fr; }
+      .card-body { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="card">
+        <div class="card-body">
+          <span class="badge dark">常用电路模块库</span>
+          <span class="badge light">适合学习 / 维修 / 抄图</span>
+          <h1>把常用电路模块和讲解集中放在一个网站里</h1>
+          <p class="lead">这个页面适合作为你的电路资料站首页。可以按分类快速找电路，看原理、公式、设计提示和故障排查点，后面还可以继续扩充更多模块。</p>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="label">当前模块数</div>
+              <div class="value" id="stat-count">0</div>
+            </div>
+            <div class="stat">
+              <div class="label">分类数量</div>
+              <div class="value" id="stat-categories">0</div>
+            </div>
+            <div class="stat">
+              <div class="label">适用场景</div>
+              <div class="value">学习 / 维修</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="section-title">
+            <h3>内容结构</h3>
+            <p>先按最常用的模块搭好资料骨架。</p>
+          </div>
+
+          <div class="list">
+            <div class="list-item"><strong>›</strong><span>基础电路：分压、上拉、下拉、RC</span></div>
+            <div class="list-item"><strong>›</strong><span>开关驱动：三极管、MOS、继电器</span></div>
+            <div class="list-item"><strong>›</strong><span>稳压供电：齐纳、7805、整流滤波</span></div>
+            <div class="list-item"><strong>›</strong><span>每个模块包含：图、原理、公式、排查</span></div>
+          </div>
+
+          <div class="tip-box">后面可以继续扩展：运放应用、比较器、LDO、Buck、ESD 保护、电平转换、采样保持、驱动背光、电机驱动等。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="card">
+        <div class="card-body">
+          <div class="toolbar">
+            <div>
+              <h2>模块检索</h2>
+              <p class="muted">按关键词和分类快速定位常用电路。</p>
+            </div>
+            <button class="ghost-btn" id="reset-btn">重置筛选</button>
+          </div>
+
+          <input id="search-input" class="search" placeholder="搜索：分压、三极管、稳压、延时、去抖…" />
+          <div class="chips" id="category-chips"></div>
+          <div class="module-list" id="module-list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body" id="detail-panel"></div>
+      </div>
+    </section>
+
+    <div class="footer">GitHub Pages 版本 · 常用电路模块资料库</div>
+  </div>
+
+  <script>
+    const modules = [
+      {
+        id: "divider",
+        name: "电阻分压电路",
+        category: "基础",
+        level: "入门",
+        summary: "用两个串联电阻从输入电压中取出所需比例的输出电压。",
+        diagram: `Vin ── R1 ──●── R2 ── GND\n             │\n           Vout`,
+        principle: "R1 与 R2 串联流过同一电流，输出点电压由上下阻值比例决定。适用于基准采样、电平转换前级、ADC 采样前端等。",
+        formula: ["Vout = Vin × R2 / (R1 + R2)", "I = Vin / (R1 + R2)"],
+        tips: ["后级负载不能太重，否则分压值会被拉低", "做 ADC 采样时，总阻值不要过大，避免采样不稳", "高压采样要校核电阻耐压与功耗"],
+        checks: ["测上端、下端和中点电压是否符合比例", "怀疑阻值漂移时可断电测量 R1/R2", "后级接入后电压明显下降，先查负载过重"]
+      },
+      {
+        id: "bjt-switch",
+        name: "NPN 三极管开关电路",
+        category: "开关驱动",
+        level: "入门",
+        summary: "利用小电流控制大电流负载，常用于 MCU 驱动蜂鸣器、继电器、小灯。",
+        diagram: `VCC ── Load ── C\n              │\n             Q1(NPN)\n              E ── GND\nMCU ── Rb ── B`,
+        principle: "当基极经限流电阻获得足够电流时，三极管导通，负载电流从 VCC 经负载流入集电极再到地。",
+        formula: ["Ib ≈ (Vctrl - 0.7) / Rb", "Ic ≈ β × Ib（开关时通常按强迫β估算）"],
+        tips: ["继电器、线圈类负载要并联续流二极管", "基极电阻不能省，避免 IO 口过流", "开关使用时让管子饱和，不按线性放大去算"],
+        checks: ["导通时测 Vbe 是否约 0.6~0.8V", "负载不动作先看基极是否有驱动", "集电极始终高电平，可能基极电流不足或三极管损坏"]
+      },
+      {
+        id: "mos-switch",
+        name: "N-MOS 低边开关",
+        category: "开关驱动",
+        level: "常用",
+        summary: "适合较大电流负载驱动，导通损耗通常比三极管更低。",
+        diagram: `VCC ── Load ── D\n              │\n            Q1(NMOS)\n              S ── GND\nMCU ── Rg ── G`,
+        principle: "当栅源电压 Vgs 超过阈值并足够高时，MOS 管导通形成低阻通路。适合灯带、电机、风扇等负载。",
+        formula: ["Vgs = Vg - Vs", "P ≈ I² × Rds(on)"],
+        tips: ["5V/3.3V 直驱时优先选逻辑电平 MOS", "栅极串小电阻抑制振荡，栅极下拉避免误导通", "感性负载同样需要续流路径"],
+        checks: ["先测 Vgs 是否足够", "负载能工作但 MOS 发热，查 Rds(on) 选型是否偏大", "断电漏通时查栅极悬空或击穿"]
+      },
+      {
+        id: "rc-delay",
+        name: "RC 延时电路",
+        category: "RC网络",
+        level: "入门",
+        summary: "利用电容充放电特性，产生上电延时、复位延时或触发延时。",
+        diagram: `VCC ── R ──●── OUT\n            │\n            C\n            │\n           GND`,
+        principle: "电容电压不能突变，上电后通过电阻缓慢充电，输出点电压按指数曲线上升。配合门电路或三极管可形成延时动作。",
+        formula: ["τ = R × C", "Vc(t) = VCC × (1 - e^(-t/RC))"],
+        tips: ["粗略上 1τ 达到约 63%，3τ 接近稳定", "电容漏电、门限漂移都会影响精确延时", "做复位延时时注意芯片门限电压"],
+        checks: ["上电时盯住电容两端电压变化是否平滑", "延时过短先查电容容量衰减", "延时不稳定常见于电解电容漏电或阻值偏差大"]
+      },
+      {
+        id: "rc-filter",
+        name: "RC 低通滤波",
+        category: "RC网络",
+        level: "常用",
+        summary: "保留低频、衰减高频，常用于按键信号去抖、PWM 平滑、模拟采样前端。",
+        diagram: `Vin ── R ──●── Vout\n            │\n            C\n            │\n           GND`,
+        principle: "高频分量更容易经电容泄放到地，因此输出更平滑。截止频率由 R 与 C 决定。",
+        formula: ["fc = 1 / (2πRC)"],
+        tips: ["R 大有利于滤波但会降低响应速度", "接 ADC 前要兼顾采样建立时间", "按键去抖时可与施密特输入配合"],
+        checks: ["输出噪声大先看电容是否虚焊失效", "信号过慢说明截止频率设得太低", "被后级加载后效果变差，检查负载阻抗"]
+      },
+      {
+        id: "zener",
+        name: "齐纳二极管稳压电路",
+        category: "稳压供电",
+        level: "常用",
+        summary: "通过齐纳管反向击穿区稳定电压，适合小电流参考或简易稳压。",
+        diagram: `Vin ── R ──●── Vout\n            │\n          ZD(反向)\n            │\n           GND`,
+        principle: "当输入高于齐纳电压并有足够电流时，齐纳管进入稳压区，将输出维持在近似恒定电压。",
+        formula: ["I_R = (Vin - Vz) / R", "I_R = I_Z + I_Load"],
+        tips: ["只能带小负载，大电流场合不经济", "串联电阻必须按最大输入和最小负载校核", "注意齐纳管功耗 P ≈ Vz × Iz"],
+        checks: ["输出偏低先查输入是否足够高", "稳压值飘动查负载是否过重", "发热明显说明串联电阻偏小或输入过高"]
+      },
+      {
+        id: "7805",
+        name: "7805 三端稳压",
+        category: "稳压供电",
+        level: "常用",
+        summary: "把较高直流输入稳压到 5V，是最常见的线性稳压方案之一。",
+        diagram: `Vin ──[7805]── Vout(5V)\n          │      │\n        Cin    Cout\n          │      │\n         GND    GND`,
+        principle: "芯片内部完成基准、误差放大和调整管控制，将输入稳定到固定 5V 输出。外围通常配输入输出滤波电容。",
+        formula: ["P_loss ≈ (Vin - 5V) × Iout"],
+        tips: ["输入要高于 5V 一定裕量", "电流大、压差大时一定会发热", "输入输出电容尽量靠近芯片引脚"],
+        checks: ["先测输入端有没有足够电压", "有输入无输出，查是否过热保护或芯片损坏", "输出抖动优先看电容与接地布局"]
+      },
+      {
+        id: "rectifier",
+        name: "桥式整流 + 滤波",
+        category: "电源前端",
+        level: "常用",
+        summary: "把交流变成脉动直流，再通过电容滤波得到较平滑的直流电压。",
+        diagram: ` AC ~ ──[Bridge]── + ──●── Vdc\n                    │    C\n AC ~ ──[Bridge]── - ──┴── GND`,
+        principle: "桥堆把交流两个半周都转换成同方向电流，滤波电容在波峰充电、波谷放电，降低纹波。",
+        formula: ["Vpk ≈ 1.414 × Vac", "Vdc(空载) ≈ Vpk - 2×Vd"],
+        tips: ["滤波后电压会比交流有效值高", "负载越重、滤波电容越小，纹波越大", "后面常再接线性或开关稳压"],
+        checks: ["测桥堆四只二极管是否有短开路", "纹波大查滤波电容容量衰减", "整流后电压异常低时查交流输入与负载短路"]
+      },
+      {
+        id: "relay-driver",
+        name: "继电器驱动电路",
+        category: "执行器",
+        level: "常用",
+        summary: "用三极管或 MOS 管驱动继电器线圈，并加续流二极管保护开关器件。",
+        diagram: `VCC ── Relay ── Q1 ── GND\n         │\n        ─|<─ Flyback diode`,
+        principle: "控制器自身电流有限，因此借助开关器件驱动线圈。线圈断电瞬间产生反向感应电压，二极管负责钳位。",
+        formula: ["Icoil = V / Rcoil", "二极管反并在线圈两端"],
+        tips: ["线圈电流要小于驱动器件余量", "触点容量和线圈电压是两个不同参数", "反向二极管极性不能接错"],
+        checks: ["吸合不了先测线圈两端电压", "有驱动信号无动作，查线圈开路", "驱动器反复损坏优先查续流二极管"]
+      },
+      {
+        id: "debounce",
+        name: "按键上拉/下拉与去抖",
+        category: "接口输入",
+        level: "入门",
+        summary: "保证按键输入在松开时电平确定，并减少机械抖动造成的误触发。",
+        diagram: `VCC ── Rpullup ──●── MCU\n                 │\n               Key\n                 │\n                GND`,
+        principle: "未按下时由上拉电阻把输入固定为高电平，按下时被按键拉到地。再结合 RC 或软件延时完成去抖。",
+        formula: ["静态时输入不悬空", "去抖延时常见 5~20ms"],
+        tips: ["悬空输入最容易导致乱跳", "硬件 RC 去抖和软件去抖可配合使用", "矩阵键盘还要考虑扫描与防串扰"],
+        checks: ["不按也跳变，先查上拉/下拉是否存在", "按下无变化，查按键接触和走线", "抖动严重优先看软件消抖时间"]
+      }
+    ];
+
+    const categories = ["全部", ...new Set(modules.map(item => item.category))];
+    let currentCategory = "全部";
+    let currentQuery = "";
+    let selectedId = modules[0].id;
+
+    const statCount = document.getElementById("stat-count");
+    const statCategories = document.getElementById("stat-categories");
+    const chips = document.getElementById("category-chips");
+    const list = document.getElementById("module-list");
+    const detailPanel = document.getElementById("detail-panel");
+    const searchInput = document.getElementById("search-input");
+    const resetBtn = document.getElementById("reset-btn");
+
+    statCount.textContent = modules.length;
+    statCategories.textContent = categories.length - 1;
+
+    function getFilteredModules() {
+      return modules.filter(item => {
+        const matchCategory = currentCategory === "全部" || item.category === currentCategory;
+        const text = [item.name, item.category, item.summary, item.principle, item.tips.join(" "), item.checks.join(" ")].join(" ").toLowerCase();
+        const q = currentQuery.trim().toLowerCase();
+        const matchQuery = q === "" || text.includes(q);
+        return matchCategory && matchQuery;
+      });
+    }
+
+    function renderCategories() {
+      chips.innerHTML = "";
+      categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "chip" + (cat === currentCategory ? " active" : "");
+        btn.textContent = cat;
+        btn.onclick = () => {
+          currentCategory = cat;
+          const filtered = getFilteredModules();
+          if (!filtered.some(item => item.id === selectedId) && filtered[0]) selectedId = filtered[0].id;
+          render();
+        };
+        chips.appendChild(btn);
+      });
+    }
+
+    function renderList(filtered) {
+      list.innerHTML = "";
+      if (!filtered.length) {
+        list.innerHTML = '<div class="empty">没找到匹配内容，可以换个关键词试试。</div>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        const button = document.createElement("button");
+        button.className = "module-btn" + (item.id === selectedId ? " active" : "");
+        button.innerHTML = `
+          <div class="module-head">
+            <div>
+              <div class="module-name">${item.name}</div>
+              <div class="module-summary">${item.summary}</div>
+            </div>
+            <span class="small-tag">${item.category}</span>
+          </div>
+          <div class="module-level">难度：${item.level}</div>
+        `;
+        button.onclick = () => {
+          selectedId = item.id;
+          render();
+        };
+        list.appendChild(button);
+      });
+    }
+
+    function blockList(items, className = "soft-block") {
+      return items.map(item => `<div class="${className}">${item}</div>`).join("");
+    }
+
+    function renderDetail(filtered) {
+      const selected = filtered.find(item => item.id === selectedId) || filtered[0] || modules[0];
+      if (selected) selectedId = selected.id;
+
+      detailPanel.innerHTML = `
+        <div class="detail-top">
+          <div>
+            <span class="badge dark">${selected.category}</span>
+            <span class="badge light">${selected.level}</span>
+            <h2 style="margin: 14px 0 0; font-size: 36px; font-weight: 800;">${selected.name}</h2>
+            <p style="margin-top: 12px; max-width: 860px; font-size: 15px; line-height: 1.8; color: #475569;">${selected.summary}</p>
+          </div>
+          <button class="ghost-btn">加入资料库</button>
+        </div>
+
+        <div class="detail-grid">
+          <div class="inner-card">
+            <div class="section-title">
+              <h3>简化电路图</h3>
+              <p>用文本示意图快速说明连接关系。</p>
+            </div>
+            <pre>${selected.diagram}</pre>
+          </div>
+
+          <div style="display:grid; gap:24px;">
+            <div class="inner-card">
+              <div class="section-title">
+                <h3>工作原理</h3>
+                <p>先理解电路为什么这样接。</p>
+              </div>
+              <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.9; color: #334155;">${selected.principle}</p>
+            </div>
+
+            <div class="inner-card">
+              <div class="section-title">
+                <h3>核心公式</h3>
+                <p>记住最常用的关系式即可。</p>
+              </div>
+              <div class="block-list">${blockList(selected.formula, "formula-block")}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="inner-card">
+            <div class="section-title">
+              <h3>设计提示</h3>
+              <p>做板子时最容易忽略的地方。</p>
+            </div>
+            <div class="block-list">${blockList(selected.tips)}</div>
+          </div>
+
+          <div class="inner-card">
+            <div class="section-title">
+              <h3>维修排查</h3>
+              <p>看图后可以直接拿万用表去测。</p>
+            </div>
+            <div class="block-list">${blockList(selected.checks)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function render() {
+      const filtered = getFilteredModules();
+      renderCategories();
+      renderList(filtered);
+      renderDetail(filtered);
+    }
+
+    searchInput.addEventListener("input", (e) => {
+      currentQuery = e.target.value;
+      const filtered = getFilteredModules();
+      if (!filtered.some(item => item.id === selectedId) && filtered[0]) selectedId = filtered[0].id;
+      render();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      currentCategory = "全部";
+      currentQuery = "";
+      selectedId = modules[0].id;
+      searchInput.value = "";
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
