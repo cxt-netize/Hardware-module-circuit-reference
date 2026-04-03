@@ -1,681 +1,794 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>常用电路模块资料库</title>
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --bg2: #eef2ff;
-      --card: #ffffff;
-      --line: #e2e8f0;
-      --muted: #64748b;
-      --text: #0f172a;
-      --soft: #f8fafc;
-      --primary: #0f172a;
-      --primary-2: #1e293b;
-    }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background: linear-gradient(135deg, var(--bg) 0%, #ffffff 48%, var(--bg2) 100%);
-    }
-
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 24px;
-    }
-
-    .hero,
-    .content-grid {
-      display: grid;
-      gap: 24px;
-    }
-
-    .hero {
-      grid-template-columns: 1.45fr 0.95fr;
-    }
-
-    .content-grid {
-      margin-top: 24px;
-      grid-template-columns: 0.95fr 1.45fr;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-    }
-
-    .card-body { padding: 24px; }
-
-    .badge {
-      display: inline-block;
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 12px;
-      margin-right: 8px;
-      margin-bottom: 8px;
-    }
-
-    .badge.dark { background: var(--primary); color: #fff; }
-    .badge.light { background: #e2e8f0; color: var(--text); }
-
-    h1, h2, h3, p { margin-top: 0; }
-    h1 {
-      font-size: 48px;
-      line-height: 1.08;
-      margin: 12px 0 0;
-    }
-
-    .muted { color: var(--muted); }
-    .lead { font-size: 16px; line-height: 1.8; color: #475569; margin-top: 16px; }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .stat {
-      background: var(--soft);
-      border-radius: 18px;
-      padding: 16px;
-    }
-
-    .stat .label { font-size: 13px; color: var(--muted); }
-    .stat .value { font-size: 28px; font-weight: 700; margin-top: 6px; }
-
-    .list {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .list-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--soft);
-      border-radius: 16px;
-      padding: 12px 14px;
-      color: #334155;
-      font-size: 14px;
-    }
-
-    .section-title h3 { font-size: 20px; margin-bottom: 8px; }
-    .section-title p { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-    .tip-box {
-      margin-top: 18px;
-      border-radius: 16px;
-      border: 1px dashed #cbd5e1;
-      padding: 14px;
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .search {
-      width: 100%;
-      height: 44px;
-      border-radius: 16px;
-      border: 1px solid #cbd5e1;
-      padding: 0 14px;
-      font-size: 14px;
-      outline: none;
-      margin-top: 18px;
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .chip,
-    .ghost-btn,
-    .module-btn {
-      cursor: pointer;
-      transition: all 0.18s ease;
-    }
-
-    .chip {
-      border: 1px solid #cbd5e1;
-      background: #fff;
-      color: #334155;
-      padding: 8px 14px;
-      border-radius: 14px;
-      font-size: 14px;
-    }
-
-    .chip.active {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
-
-    .ghost-btn {
-      border: 1px solid #cbd5e1;
-      background: #fff;
-      color: var(--text);
-      border-radius: 16px;
-      padding: 10px 16px;
-      font-size: 14px;
-    }
-
-    .ghost-btn:hover,
-    .chip:hover,
-    .module-btn:hover { transform: translateY(-1px); }
-
-    .module-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-      max-height: 560px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .module-btn {
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: #fff;
-      padding: 16px;
-      text-align: left;
-      width: 100%;
-    }
-
-    .module-btn.active {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
-
-    .module-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .module-name { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-    .module-summary { font-size: 14px; line-height: 1.6; color: var(--muted); }
-    .module-btn.active .module-summary { color: #cbd5e1; }
-    .module-level { margin-top: 10px; font-size: 12px; color: #94a3b8; }
-    .module-btn.active .module-level { color: #cbd5e1; }
-
-    .small-tag {
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 12px;
-      border: 1px solid #cbd5e1;
-      color: #334155;
-      white-space: nowrap;
-    }
-
-    .module-btn.active .small-tag {
-      border-color: rgba(255,255,255,0.25);
-      color: #fff;
-    }
-
-    .detail-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-
-    .detail-grid {
-      display: grid;
-      gap: 24px;
-      grid-template-columns: 0.9fr 1.1fr;
-      margin-top: 24px;
-    }
-
-    .two-col {
-      display: grid;
-      gap: 24px;
-      grid-template-columns: 1fr 1fr;
-      margin-top: 24px;
-    }
-
-    .inner-card {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 20px;
-    }
-
-    pre {
-      overflow-x: auto;
-      border-radius: 18px;
-      background: #020617;
-      color: #e2e8f0;
-      padding: 18px;
-      font-size: 14px;
-      line-height: 1.8;
-      margin: 16px 0 0;
-    }
-
-    .block-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .soft-block,
-    .formula-block {
-      background: var(--soft);
-      border-radius: 16px;
-      padding: 12px 14px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .formula-block { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-
-    .empty {
-      border-radius: 18px;
-      border: 1px dashed #cbd5e1;
-      background: var(--soft);
-      padding: 28px;
-      text-align: center;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .footer {
-      margin-top: 28px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 1024px) {
-      .hero, .content-grid, .detail-grid, .two-col { grid-template-columns: 1fr; }
-      h1 { font-size: 34px; }
-    }
-
-    @media (max-width: 640px) {
-      .container { padding: 16px; }
-      .stats { grid-template-columns: 1fr; }
-      .card-body { padding: 18px; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <section class="hero">
-      <div class="card">
-        <div class="card-body">
-          <span class="badge dark">常用电路模块库</span>
-          <span class="badge light">适合学习 / 维修 / 抄图</span>
-          <h1>把常用电路模块和讲解集中放在一个网站里</h1>
-          <p class="lead">这个页面适合作为你的电路资料站首页。可以按分类快速找电路，看原理、公式、设计提示和故障排查点，后面还可以继续扩充更多模块。</p>
-
-          <div class="stats">
-            <div class="stat">
-              <div class="label">当前模块数</div>
-              <div class="value" id="stat-count">0</div>
-            </div>
-            <div class="stat">
-              <div class="label">分类数量</div>
-              <div class="value" id="stat-categories">0</div>
-            </div>
-            <div class="stat">
-              <div class="label">适用场景</div>
-              <div class="value">学习 / 维修</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body">
-          <div class="section-title">
-            <h3>内容结构</h3>
-            <p>先按最常用的模块搭好资料骨架。</p>
-          </div>
-
-          <div class="list">
-            <div class="list-item"><strong>›</strong><span>基础电路：分压、上拉、下拉、RC</span></div>
-            <div class="list-item"><strong>›</strong><span>开关驱动：三极管、MOS、继电器</span></div>
-            <div class="list-item"><strong>›</strong><span>稳压供电：齐纳、7805、整流滤波</span></div>
-            <div class="list-item"><strong>›</strong><span>每个模块包含：图、原理、公式、排查</span></div>
-          </div>
-
-          <div class="tip-box">后面可以继续扩展：运放应用、比较器、LDO、Buck、ESD 保护、电平转换、采样保持、驱动背光、电机驱动等。</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="content-grid">
-      <div class="card">
-        <div class="card-body">
-          <div class="toolbar">
-            <div>
-              <h2>模块检索</h2>
-              <p class="muted">按关键词和分类快速定位常用电路。</p>
-            </div>
-            <button class="ghost-btn" id="reset-btn">重置筛选</button>
-          </div>
-
-          <input id="search-input" class="search" placeholder="搜索：分压、三极管、稳压、延时、去抖…" />
-          <div class="chips" id="category-chips"></div>
-          <div class="module-list" id="module-list"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body" id="detail-panel"></div>
-      </div>
-    </section>
-
-    <div class="footer">GitHub Pages 版本 · 常用电路模块资料库</div>
-  </div>
-
-  <script>
-    const modules = [
-      {
-        id: "divider",
-        name: "电阻分压电路",
-        category: "基础",
-        level: "入门",
-        summary: "用两个串联电阻从输入电压中取出所需比例的输出电压。",
-        diagram: `Vin ── R1 ──●── R2 ── GND\n             │\n           Vout`,
-        principle: "R1 与 R2 串联流过同一电流，输出点电压由上下阻值比例决定。适用于基准采样、电平转换前级、ADC 采样前端等。",
-        formula: ["Vout = Vin × R2 / (R1 + R2)", "I = Vin / (R1 + R2)"],
-        tips: ["后级负载不能太重，否则分压值会被拉低", "做 ADC 采样时，总阻值不要过大，避免采样不稳", "高压采样要校核电阻耐压与功耗"],
-        checks: ["测上端、下端和中点电压是否符合比例", "怀疑阻值漂移时可断电测量 R1/R2", "后级接入后电压明显下降，先查负载过重"]
-      },
-      {
-        id: "bjt-switch",
-        name: "NPN 三极管开关电路",
-        category: "开关驱动",
-        level: "入门",
-        summary: "利用小电流控制大电流负载，常用于 MCU 驱动蜂鸣器、继电器、小灯。",
-        diagram: `VCC ── Load ── C\n              │\n             Q1(NPN)\n              E ── GND\nMCU ── Rb ── B`,
-        principle: "当基极经限流电阻获得足够电流时，三极管导通，负载电流从 VCC 经负载流入集电极再到地。",
-        formula: ["Ib ≈ (Vctrl - 0.7) / Rb", "Ic ≈ β × Ib（开关时通常按强迫β估算）"],
-        tips: ["继电器、线圈类负载要并联续流二极管", "基极电阻不能省，避免 IO 口过流", "开关使用时让管子饱和，不按线性放大去算"],
-        checks: ["导通时测 Vbe 是否约 0.6~0.8V", "负载不动作先看基极是否有驱动", "集电极始终高电平，可能基极电流不足或三极管损坏"]
-      },
-      {
-        id: "mos-switch",
-        name: "N-MOS 低边开关",
-        category: "开关驱动",
-        level: "常用",
-        summary: "适合较大电流负载驱动，导通损耗通常比三极管更低。",
-        diagram: `VCC ── Load ── D\n              │\n            Q1(NMOS)\n              S ── GND\nMCU ── Rg ── G`,
-        principle: "当栅源电压 Vgs 超过阈值并足够高时，MOS 管导通形成低阻通路。适合灯带、电机、风扇等负载。",
-        formula: ["Vgs = Vg - Vs", "P ≈ I² × Rds(on)"],
-        tips: ["5V/3.3V 直驱时优先选逻辑电平 MOS", "栅极串小电阻抑制振荡，栅极下拉避免误导通", "感性负载同样需要续流路径"],
-        checks: ["先测 Vgs 是否足够", "负载能工作但 MOS 发热，查 Rds(on) 选型是否偏大", "断电漏通时查栅极悬空或击穿"]
-      },
-      {
-        id: "rc-delay",
-        name: "RC 延时电路",
-        category: "RC网络",
-        level: "入门",
-        summary: "利用电容充放电特性，产生上电延时、复位延时或触发延时。",
-        diagram: `VCC ── R ──●── OUT\n            │\n            C\n            │\n           GND`,
-        principle: "电容电压不能突变，上电后通过电阻缓慢充电，输出点电压按指数曲线上升。配合门电路或三极管可形成延时动作。",
-        formula: ["τ = R × C", "Vc(t) = VCC × (1 - e^(-t/RC))"],
-        tips: ["粗略上 1τ 达到约 63%，3τ 接近稳定", "电容漏电、门限漂移都会影响精确延时", "做复位延时时注意芯片门限电压"],
-        checks: ["上电时盯住电容两端电压变化是否平滑", "延时过短先查电容容量衰减", "延时不稳定常见于电解电容漏电或阻值偏差大"]
-      },
-      {
-        id: "rc-filter",
-        name: "RC 低通滤波",
-        category: "RC网络",
-        level: "常用",
-        summary: "保留低频、衰减高频，常用于按键信号去抖、PWM 平滑、模拟采样前端。",
-        diagram: `Vin ── R ──●── Vout\n            │\n            C\n            │\n           GND`,
-        principle: "高频分量更容易经电容泄放到地，因此输出更平滑。截止频率由 R 与 C 决定。",
-        formula: ["fc = 1 / (2πRC)"],
-        tips: ["R 大有利于滤波但会降低响应速度", "接 ADC 前要兼顾采样建立时间", "按键去抖时可与施密特输入配合"],
-        checks: ["输出噪声大先看电容是否虚焊失效", "信号过慢说明截止频率设得太低", "被后级加载后效果变差，检查负载阻抗"]
-      },
-      {
-        id: "zener",
-        name: "齐纳二极管稳压电路",
-        category: "稳压供电",
-        level: "常用",
-        summary: "通过齐纳管反向击穿区稳定电压，适合小电流参考或简易稳压。",
-        diagram: `Vin ── R ──●── Vout\n            │\n          ZD(反向)\n            │\n           GND`,
-        principle: "当输入高于齐纳电压并有足够电流时，齐纳管进入稳压区，将输出维持在近似恒定电压。",
-        formula: ["I_R = (Vin - Vz) / R", "I_R = I_Z + I_Load"],
-        tips: ["只能带小负载，大电流场合不经济", "串联电阻必须按最大输入和最小负载校核", "注意齐纳管功耗 P ≈ Vz × Iz"],
-        checks: ["输出偏低先查输入是否足够高", "稳压值飘动查负载是否过重", "发热明显说明串联电阻偏小或输入过高"]
-      },
-      {
-        id: "7805",
-        name: "7805 三端稳压",
-        category: "稳压供电",
-        level: "常用",
-        summary: "把较高直流输入稳压到 5V，是最常见的线性稳压方案之一。",
-        diagram: `Vin ──[7805]── Vout(5V)\n          │      │\n        Cin    Cout\n          │      │\n         GND    GND`,
-        principle: "芯片内部完成基准、误差放大和调整管控制，将输入稳定到固定 5V 输出。外围通常配输入输出滤波电容。",
-        formula: ["P_loss ≈ (Vin - 5V) × Iout"],
-        tips: ["输入要高于 5V 一定裕量", "电流大、压差大时一定会发热", "输入输出电容尽量靠近芯片引脚"],
-        checks: ["先测输入端有没有足够电压", "有输入无输出，查是否过热保护或芯片损坏", "输出抖动优先看电容与接地布局"]
-      },
-      {
-        id: "rectifier",
-        name: "桥式整流 + 滤波",
-        category: "电源前端",
-        level: "常用",
-        summary: "把交流变成脉动直流，再通过电容滤波得到较平滑的直流电压。",
-        diagram: ` AC ~ ──[Bridge]── + ──●── Vdc\n                    │    C\n AC ~ ──[Bridge]── - ──┴── GND`,
-        principle: "桥堆把交流两个半周都转换成同方向电流，滤波电容在波峰充电、波谷放电，降低纹波。",
-        formula: ["Vpk ≈ 1.414 × Vac", "Vdc(空载) ≈ Vpk - 2×Vd"],
-        tips: ["滤波后电压会比交流有效值高", "负载越重、滤波电容越小，纹波越大", "后面常再接线性或开关稳压"],
-        checks: ["测桥堆四只二极管是否有短开路", "纹波大查滤波电容容量衰减", "整流后电压异常低时查交流输入与负载短路"]
-      },
-      {
-        id: "relay-driver",
-        name: "继电器驱动电路",
-        category: "执行器",
-        level: "常用",
-        summary: "用三极管或 MOS 管驱动继电器线圈，并加续流二极管保护开关器件。",
-        diagram: `VCC ── Relay ── Q1 ── GND\n         │\n        ─|<─ Flyback diode`,
-        principle: "控制器自身电流有限，因此借助开关器件驱动线圈。线圈断电瞬间产生反向感应电压，二极管负责钳位。",
-        formula: ["Icoil = V / Rcoil", "二极管反并在线圈两端"],
-        tips: ["线圈电流要小于驱动器件余量", "触点容量和线圈电压是两个不同参数", "反向二极管极性不能接错"],
-        checks: ["吸合不了先测线圈两端电压", "有驱动信号无动作，查线圈开路", "驱动器反复损坏优先查续流二极管"]
-      },
-      {
-        id: "debounce",
-        name: "按键上拉/下拉与去抖",
-        category: "接口输入",
-        level: "入门",
-        summary: "保证按键输入在松开时电平确定，并减少机械抖动造成的误触发。",
-        diagram: `VCC ── Rpullup ──●── MCU\n                 │\n               Key\n                 │\n                GND`,
-        principle: "未按下时由上拉电阻把输入固定为高电平，按下时被按键拉到地。再结合 RC 或软件延时完成去抖。",
-        formula: ["静态时输入不悬空", "去抖延时常见 5~20ms"],
-        tips: ["悬空输入最容易导致乱跳", "硬件 RC 去抖和软件去抖可配合使用", "矩阵键盘还要考虑扫描与防串扰"],
-        checks: ["不按也跳变，先查上拉/下拉是否存在", "按下无变化，查按键接触和走线", "抖动严重优先看软件消抖时间"]
-      }
-    ];
-
-    const categories = ["全部", ...new Set(modules.map(item => item.category))];
-    let currentCategory = "全部";
-    let currentQuery = "";
-    let selectedId = modules[0].id;
-
-    const statCount = document.getElementById("stat-count");
-    const statCategories = document.getElementById("stat-categories");
-    const chips = document.getElementById("category-chips");
-    const list = document.getElementById("module-list");
-    const detailPanel = document.getElementById("detail-panel");
-    const searchInput = document.getElementById("search-input");
-    const resetBtn = document.getElementById("reset-btn");
-
-    statCount.textContent = modules.length;
-    statCategories.textContent = categories.length - 1;
-
-    function getFilteredModules() {
-      return modules.filter(item => {
-        const matchCategory = currentCategory === "全部" || item.category === currentCategory;
-        const text = [item.name, item.category, item.summary, item.principle, item.tips.join(" "), item.checks.join(" ")].join(" ").toLowerCase();
-        const q = currentQuery.trim().toLowerCase();
-        const matchQuery = q === "" || text.includes(q);
-        return matchCategory && matchQuery;
-      });
-    }
-
-    function renderCategories() {
-      chips.innerHTML = "";
-      categories.forEach(cat => {
-        const btn = document.createElement("button");
-        btn.className = "chip" + (cat === currentCategory ? " active" : "");
-        btn.textContent = cat;
-        btn.onclick = () => {
-          currentCategory = cat;
-          const filtered = getFilteredModules();
-          if (!filtered.some(item => item.id === selectedId) && filtered[0]) selectedId = filtered[0].id;
-          render();
-        };
-        chips.appendChild(btn);
-      });
-    }
-
-    function renderList(filtered) {
-      list.innerHTML = "";
-      if (!filtered.length) {
-        list.innerHTML = '<div class="empty">没找到匹配内容，可以换个关键词试试。</div>';
-        return;
-      }
-
-      filtered.forEach(item => {
-        const button = document.createElement("button");
-        button.className = "module-btn" + (item.id === selectedId ? " active" : "");
-        button.innerHTML = `
-          <div class="module-head">
-            <div>
-              <div class="module-name">${item.name}</div>
-              <div class="module-summary">${item.summary}</div>
-            </div>
-            <span class="small-tag">${item.category}</span>
-          </div>
-          <div class="module-level">难度：${item.level}</div>
-        `;
-        button.onclick = () => {
-          selectedId = item.id;
-          render();
-        };
-        list.appendChild(button);
-      });
-    }
-
-    function blockList(items, className = "soft-block") {
-      return items.map(item => `<div class="${className}">${item}</div>`).join("");
-    }
-
-    function renderDetail(filtered) {
-      const selected = filtered.find(item => item.id === selectedId) || filtered[0] || modules[0];
-      if (selected) selectedId = selected.id;
-
-      detailPanel.innerHTML = `
-        <div class="detail-top">
-          <div>
-            <span class="badge dark">${selected.category}</span>
-            <span class="badge light">${selected.level}</span>
-            <h2 style="margin: 14px 0 0; font-size: 36px; font-weight: 800;">${selected.name}</h2>
-            <p style="margin-top: 12px; max-width: 860px; font-size: 15px; line-height: 1.8; color: #475569;">${selected.summary}</p>
-          </div>
-          <button class="ghost-btn">加入资料库</button>
-        </div>
-
-        <div class="detail-grid">
-          <div class="inner-card">
-            <div class="section-title">
-              <h3>简化电路图</h3>
-              <p>用文本示意图快速说明连接关系。</p>
-            </div>
-            <pre>${selected.diagram}</pre>
-          </div>
-
-          <div style="display:grid; gap:24px;">
-            <div class="inner-card">
-              <div class="section-title">
-                <h3>工作原理</h3>
-                <p>先理解电路为什么这样接。</p>
-              </div>
-              <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.9; color: #334155;">${selected.principle}</p>
-            </div>
-
-            <div class="inner-card">
-              <div class="section-title">
-                <h3>核心公式</h3>
-                <p>记住最常用的关系式即可。</p>
-              </div>
-              <div class="block-list">${blockList(selected.formula, "formula-block")}</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="two-col">
-          <div class="inner-card">
-            <div class="section-title">
-              <h3>设计提示</h3>
-              <p>做板子时最容易忽略的地方。</p>
-            </div>
-            <div class="block-list">${blockList(selected.tips)}</div>
-          </div>
-
-          <div class="inner-card">
-            <div class="section-title">
-              <h3>维修排查</h3>
-              <p>看图后可以直接拿万用表去测。</p>
-            </div>
-            <div class="block-list">${blockList(selected.checks)}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function render() {
-      const filtered = getFilteredModules();
-      renderCategories();
-      renderList(filtered);
-      renderDetail(filtered);
-    }
-
-    searchInput.addEventListener("input", (e) => {
-      currentQuery = e.target.value;
-      const filtered = getFilteredModules();
-      if (!filtered.some(item => item.id === selectedId) && filtered[0]) selectedId = filtered[0].id;
-      render();
-    });
-
-    resetBtn.addEventListener("click", () => {
-      currentCategory = "全部";
-      currentQuery = "";
-      selectedId = modules[0].id;
-      searchInput.value = "";
-      render();
-    });
-
-    render();
-  </script>
-</body>
-</html>
+import React from "react";
+
+const SITE = {
+  brand: "矩芯工坊",
+  owner: "陈兴体",
+  subtitle: "嵌入式工程作品与能力沉淀",
+  headline: "矩芯工坊 · 陈兴体的嵌入式工程能力网站",
+  tagline: "把真实项目、工程经验与长期成长沉淀成可展示的个人资产",
+  intro:
+    "聚焦单片机、ESP32、STM32、嵌入式系统、PCB 与上位机协同开发，持续整理项目实战、常用电路模块、调试经验与成长路线，构建属于自己的个人工程生态。",
+  about:
+    "基于个人简历信息整理而来：求职方向为嵌入式软件工程师，具备电子工程相关实践经历，本科毕业于广西百色学院电子信息工程专业，当前以嵌入式开发、系统调试与项目落地为主要积累方向。",
+  profile: [
+    "求职目标：嵌入式软件工程师",
+    "目前方向：嵌入式软件工程师（MCU）",
+    "工作经验：0.5 年",
+    "学历：本科｜广西百色学院｜电子信息工程",
+    "目前状态：离职，寻找机会",
+    "现居地：广西壮族自治区",
+  ],
+  focus: [
+    "嵌入式软件开发与驱动实现",
+    "STM32 / ESP32 平台项目开发",
+    "硬件联调与故障排查",
+    "工程项目展示与知识沉淀",
+  ],
+  jobIntent: [
+    "目标岗位：嵌入式软件工程师",
+    "核心方向：MCU / 嵌入式系统开发",
+    "可展示内容：项目实战、技能地图、比赛荣誉、模块积累",
+    "当前诉求：寻找更适合持续成长的技术机会",
+  ],
+  canDo: [
+    "基于 STM32 / ESP32 / C51 完成基础到中等复杂度项目开发",
+    "完成常见外设驱动、通信协议与任务系统搭建",
+    "配合硬件调试，定位接口、时序、电源与逻辑问题",
+    "把真实项目整理成可展示的作品集与技术复盘内容",
+  ],
+  fitRoles: [
+    "嵌入式软件工程师",
+    "MCU 开发工程师",
+    "物联网嵌入式开发工程师",
+    "硬件联调 / 测试开发方向",
+  ],
+  recruiterView: [
+    "基础能力：C 语言、STM32、ESP32、FreeRTOS、常见通信协议",
+    "项目能力：物联网系统、交互终端、图像采集与打印类项目",
+    "工程能力：调试、联调、文档、打样、试产跟进",
+    "成长证明：竞赛获奖、奖学金、项目持续沉淀",
+  ],
+  resumePack: [
+    "期望岗位：嵌入式软件工程师 / MCU 方向",
+    "期望薪资：4-10k",
+    "当前状态：离职，正在寻找机会",
+    "简历形式：PDF 简历、网站作品集、项目展示页",
+  ],
+  deliveryPack: [
+    "简历 PDF 下载",
+    "项目作品集主页",
+    "重点项目详情页",
+    "邮箱联系入口",
+  ],
+  openTo: [
+    "嵌入式软件岗位沟通",
+    "项目展示与技术交流",
+    "校招 / 社招初阶机会",
+    "硬件联调与开发相关机会",
+  ],
+  websiteUse: [
+    "发给招聘方，快速展示项目与技能结构",
+    "作为简历补充，承接 PDF 无法展开的项目细节",
+    "后续可扩展为文章、开源仓库与视频内容入口",
+    "积累成长期个人工程能力资产库",
+  ],
+  email: "723507618@qq.com",
+  skills: [
+    {
+      title: "C 语言与嵌入式基础",
+      desc: "熟悉 C 语言、指针、结构体、内存管理、位操作，并能应用到实际开发中。",
+      tags: ["C 语言", "指针", "结构体", "内存管理"],
+    },
+    {
+      title: "STM32 / C51 / ESP32 开发",
+      desc: "熟悉基于库函数的 STM32、C51、ESP32 平台开发，能完成常见功能模块搭建。",
+      tags: ["STM32", "C51", "ESP32", "库函数开发"],
+    },
+    {
+      title: "通信协议与外设驱动",
+      desc: "对 IIC、SPI、CAN、GPIO、ADC、Flash 等常见接口具备实际开发经验。",
+      tags: ["IIC", "SPI", "CAN", "ADC"],
+    },
+    {
+      title: "FreeRTOS 与系统任务管理",
+      desc: "熟悉 FreeRTOS，理解列表、队列、任务管理、软件定时器与信号量。",
+      tags: ["FreeRTOS", "任务管理", "队列", "信号量"],
+    },
+    {
+      title: "硬件理解与调试能力",
+      desc: "具备数据结构、数电模电基础，能理解分析原理图，并能使用示波器、电源、信号发生器和万用表排查问题。",
+      tags: ["原理图分析", "示波器", "万用表", "故障排查"],
+    },
+    {
+      title: "工具链与工程协作",
+      desc: "熟悉 Keil5、VSCode、Arduino 等开发工具，并具备英文文档阅读与团队合作能力。",
+      tags: ["Keil5", "VSCode", "Arduino", "英文文档"],
+    },
+  ],
+  experience: [
+    {
+      title: "东莞灏丰电子科技有限公司｜电子工程师",
+      time: "2024.10 - 2025.03",
+      desc: "负责现有产品代码修改与维护，多款键盘鼠标测试打样，并参与新产品元器件选型、PCB 布局设计、调试优化、技术文档与测试文档编写，以及试产和生产跟进。",
+    },
+    {
+      title: "广西百色学院｜电子信息工程（本科）",
+      time: "2021.09 - 2025.06",
+      desc: "主修 C 语言程序设计、数据结构、数字信号处理、模电、数电、通信原理、单片机原理与嵌入式开发等课程。",
+    },
+  ],
+  honors: [
+    "2024/4 蓝桥杯全国软件和信息技术专业人才大赛嵌入式组二等奖",
+    "2024/7 全省大学生电子设计大赛三等奖",
+    "2024/5 中国机器人及人工智能大赛人工智能创新赛二等奖",
+    "2024/8 国际青年人工智能一等奖",
+    "2023/7 第九届互联网+大学生创新创业大赛校级三等奖",
+    "学习成绩排名班级前 5，多次获得学校奖学金",
+  ],
+  featuredProject: {
+    title: "STM32 简易照相机",
+    type: "STM32 / 图像采集 / 热敏打印",
+    intro:
+      "这是当前网站里的精选项目示例。项目以 STM32 为核心，结合摄像头、2.8 寸 TFT 显示屏、热敏打印模块与锂电池管理，实现照片拍摄、显示、打印、删除等功能，并通过模块化设计优化接口与系统协同。",
+    background: "希望围绕一个完整的小型终端产品，综合展示图像采集、界面交互、外设协同、低功耗设计和电池管理等嵌入式核心能力。",
+    architecture: [
+      "STM32 作为系统主控，负责图像采集、显示、存储和打印流程调度",
+      "DCMI 接入摄像头实现图像采集",
+      "FSMC 驱动 TFT 屏用于图像与界面显示",
+      "SDIO 挂载 SD 卡用于照片存储",
+      "SPI 控制热敏打印头完成图片输出",
+      "结合电池与休眠唤醒机制优化续航表现",
+    ],
+    responsibilities: [
+      "移植 LVGL8.2 图形库，搭建拍照、显示、打印、删除界面逻辑",
+      "完成多外设协同：摄像头、屏幕、SD 卡、热敏打印模块联调",
+      "围绕图像采集与显示链路进行接口整合与调试",
+      "设计低功耗机制，实现定时/一键休眠与唤醒管理",
+      "从系统功能角度优化实时性与续航体验",
+    ],
+    highlights: [
+      "LVGL8.2 图形界面",
+      "DCMI 图像采集",
+      "SDIO / FSMC / SPI 外设协同",
+      "热敏打印输出",
+      "低功耗设计与电池管理",
+    ],
+    outcome: "项目体现了你从 MCU 主控、图形界面、图像链路、存储管理到外设打印协同的完整工程整合能力，适合作为网站首页重点展示项目。",
+  },
+  featuredIotProject: {
+    title: "STM32 + ESP8266 + 微信小程序环境监测系统",
+    type: "STM32 / 物联网 / 微信小程序",
+    intro:
+      "该项目围绕室内环境监测与远程控制展开，实现温湿度等关键参数采集、本地显示、数据上云、小程序远程控制以及异常报警，适合作为你物联网方向能力的代表作品。",
+    background: "目标是把采集、显示、联网、远程控制和异常处理串成一个完整闭环，形成从硬件到云端再到小程序的端云协同系统。",
+    architecture: [
+      "STM32 负责环境参数采集与本地控制逻辑",
+      "ADC 采集环境相关数据并进行处理",
+      "I2C 驱动 LCD 实现本地数据展示",
+      "UART 与 ESP8266 通信完成数据透传",
+      "MQTT 建立与云平台的长连接，实现实时上云",
+      "微信小程序通过云端接口实现远程控制与异常提醒",
+    ],
+    responsibilities: [
+      "基于 FreeRTOS 构建多任务管理系统",
+      "完成本地采集、显示、串口透传、联网流程整合",
+      "实现 MQTT 上云与云端可视化链路",
+      "对接微信小程序远程控制与报警逻辑",
+      "围绕系统稳定性进行任务划分与通信协同调试",
+    ],
+    highlights: [
+      "FreeRTOS 多任务系统",
+      "MQTT 物联网通信",
+      "ESP8266 无线联网",
+      "微信小程序远程控制",
+      "本地显示 + 云端联动",
+    ],
+    outcome: "项目体现了你在嵌入式、通信、联网、云端联动和小程序对接方面的综合能力，适合作为网站中的第二个重点项目。",
+  },
+  featuredEspProject: {
+    title: "ESP32 智慧桌面玩具",
+    type: "ESP32-S3 / 多媒体交互终端",
+    intro:
+      "项目基于 ESP32-S3 双核芯片构建，集成语音问答、串口助手、小游戏、音乐播放、天气查询、日历查询、实时时钟、电脑性能监测和快捷键控制等功能，是一个功能高度集成的桌面交互终端。",
+    background: "目标是围绕 ESP32 的联网能力、图形界面能力和多媒体能力，设计一个兼具娱乐性、交互性和工具性的桌面设备。",
+    architecture: [
+      "ESP32-S3 作为双核主控，承担界面、网络、输入输出与任务调度",
+      "LVGL 驱动 LCD 触控屏实现动态交互界面",
+      "Wi-Fi / 蓝牙负责云端通信与本地设备交互",
+      "IIS 音频接口配合 MAX98357 实现数字音频播放",
+      "MAX9814 等音频输入模块配合语音能力构建交互链路",
+      "蓝牙 HID 模拟键盘，实现电脑快捷键控制",
+    ],
+    responsibilities: [
+      "完成多功能桌面终端的功能规划与系统集成",
+      "搭建 LVGL 图形界面与交互逻辑",
+      "实现网络通信、云端 API 调用与本地交互协同",
+      "围绕 FreeRTOS 多任务调度划分网络、触控、音频等任务",
+      "结合音频输入输出、蓝牙 HID、JSON 解析和协议处理优化系统体验",
+    ],
+    highlights: [
+      "ESP32-S3 双核架构",
+      "LVGL 图形界面",
+      "Wi-Fi / 蓝牙双通信",
+      "DeepSeek 语音问答方向",
+      "音频输入输出与多媒体交互",
+      "蓝牙 HID 快捷键控制",
+    ],
+    outcome: "项目体现了你在交互界面、网络通信、多媒体、协议处理和系统整合方面的能力，适合作为网站中偏综合创新方向的代表项目。",
+  },
+  projects: [
+    {
+      title: "STM32 + ESP8266 + 微信小程序环境监测系统",
+      type: "STM32 / 物联网 / 小程序",
+      summary: "实现室内温湿度等环境参数实时监测，并支持远程控制和异常报警。",
+      points: ["FreeRTOS 多任务管理", "MQTT 上云与可视化", "微信小程序远程控制"],
+      tech: ["STM32", "ESP8266", "FreeRTOS", "MQTT", "UART", "I2C", "HTTP API"],
+    },
+    {
+      title: "ESP32 智慧桌面玩具",
+      type: "ESP32-S3 / 交互终端",
+      summary: "集成语音问答、串口助手、2048 游戏、音乐播放、天气日历、电脑性能监测与快捷键控制。",
+      points: ["LVGL 动态交互界面", "Wi-Fi / 蓝牙多协议通信", "FreeRTOS 多任务调度"],
+      tech: ["ESP32-S3", "LVGL", "HTTP", "蓝牙 HID", "IIS", "ADC", "JSON"],
+    },
+    {
+      title: "STM32 简易照相机",
+      type: "STM32 / 图像采集 / 打印",
+      summary: "结合摄像头、TFT、热敏打印与锂电池管理，实现照片拍摄、显示、打印与删除。",
+      points: ["LVGL8.2 图形界面", "DCMI 图像采集", "SDIO / FSMC / SPI 外设协同"],
+      tech: ["STM32", "LVGL8.2", "DCMI", "SDIO", "FSMC", "SPI", "热敏打印"],
+    },
+  ],
+  modules: [
+    { title: "三极管开关驱动", type: "驱动类", desc: "适用于继电器、蜂鸣器、小功率负载控制。" },
+    { title: "分压采样电路", type: "采样类", desc: "用于电压检测、ADC 前端输入与量程匹配。" },
+    { title: "稳压与滤波模块", type: "电源类", desc: "用于基础供电、纹波控制与局部去耦。" },
+    { title: "MOS 管驱动模块", type: "驱动类", desc: "用于较大电流负载开关与功率侧控制。" },
+    { title: "按键消抖电路", type: "逻辑控制类", desc: "用于稳定按键输入与抗抖动触发。" },
+    { title: "电平转换接口", type: "接口类", desc: "用于不同电压域器件之间的安全通信。" },
+  ],
+  articles: [
+    {
+      title: "如何把一个工程项目写成可展示的项目页",
+      tag: "方法论",
+      desc: "把项目背景、结构、难点、调试过程和最终结果整理成标准化资产。",
+    },
+    {
+      title: "SD 卡初始化失败时，我是如何一步步定位问题的",
+      tag: "项目复盘",
+      desc: "真实记录从异常现象到命令流程定位，再到状态机修正的过程。",
+    },
+    {
+      title: "PCB 设计中最容易忽略的回流路径问题",
+      tag: "硬件经验",
+      desc: "从布局布线角度理解信号回流、电源地处理与常见误区。",
+    },
+    {
+      title: "FPGA 初学者常见时序误区整理",
+      tag: "学习笔记",
+      desc: "围绕时钟域、时序约束和接口采样，总结容易踩坑的关键点。",
+    },
+  ],
+  services: [
+    {
+      title: "项目展示与技术沉淀",
+      desc: "围绕真实项目构建可展示的页面、说明文档和复盘内容。",
+    },
+    {
+      title: "模块整理与资料积累",
+      desc: "把常用电路模块、电源模块、接口模块逐步沉淀成知识库。",
+    },
+    {
+      title: "开源与传播",
+      desc: "通过仓库、文章、视频和资料下载形成长期内容资产。",
+    },
+  ],
+  roadmap: [
+    { title: "阶段 1：网站与资产骨架", desc: "完成首页、关于我、项目、模块库、文章页与联系入口。" },
+    { title: "阶段 2：内容持续更新", desc: "每周新增项目记录、电路模块和技术文章。" },
+    { title: "阶段 3：开源与传播", desc: "补齐 GitHub / Gitee 仓库说明，并同步视频内容。" },
+    { title: "阶段 4：资料整理与转化", desc: "沉淀 PDF 资料、模块合集、服务合作与简历下载页面。" },
+  ],
+  contact: [
+    "邮箱：723507618@qq.com",
+    "GitHub / Gitee 代码入口",
+    "B站内容主页",
+    "咸鱼服务与展示入口",
+    "简历下载与合作说明",
+  ],
+};
+
+function runTests() {
+  const tests = [
+    { name: "brand_exists", pass: typeof SITE.brand === "string" && SITE.brand.trim().length > 0 },
+    { name: "owner_exists", pass: typeof SITE.owner === "string" && SITE.owner.trim().length > 0 },
+    { name: "headline_exists", pass: typeof SITE.headline === "string" && SITE.headline.trim().length > 0 },
+    { name: "intro_exists", pass: typeof SITE.intro === "string" && SITE.intro.trim().length > 0 },
+    { name: "profile_count", pass: Array.isArray(SITE.profile) && SITE.profile.length >= 4 },
+    { name: "focus_count", pass: Array.isArray(SITE.focus) && SITE.focus.length >= 4 },
+    { name: "job_intent_count", pass: Array.isArray(SITE.jobIntent) && SITE.jobIntent.length >= 4 },
+    { name: "can_do_count", pass: Array.isArray(SITE.canDo) && SITE.canDo.length >= 4 },
+    { name: "fit_roles_count", pass: Array.isArray(SITE.fitRoles) && SITE.fitRoles.length >= 4 },
+    { name: "recruiter_view_count", pass: Array.isArray(SITE.recruiterView) && SITE.recruiterView.length >= 4 },
+    { name: "resume_pack_count", pass: Array.isArray(SITE.resumePack) && SITE.resumePack.length >= 4 },
+    { name: "delivery_pack_count", pass: Array.isArray(SITE.deliveryPack) && SITE.deliveryPack.length >= 4 },
+    { name: "skills_count", pass: Array.isArray(SITE.skills) && SITE.skills.length >= 6 },
+    { name: "experience_count", pass: Array.isArray(SITE.experience) && SITE.experience.length >= 2 },
+    { name: "honors_count", pass: Array.isArray(SITE.honors) && SITE.honors.length >= 4 },
+    { name: "projects_count", pass: Array.isArray(SITE.projects) && SITE.projects.length >= 3 },
+    { name: "modules_count", pass: Array.isArray(SITE.modules) && SITE.modules.length >= 6 },
+    { name: "articles_count", pass: Array.isArray(SITE.articles) && SITE.articles.length >= 4 },
+    { name: "services_count", pass: Array.isArray(SITE.services) && SITE.services.length >= 3 },
+    { name: "roadmap_count", pass: Array.isArray(SITE.roadmap) && SITE.roadmap.length >= 4 },
+    { name: "contact_count", pass: Array.isArray(SITE.contact) && SITE.contact.length >= 4 },
+    { name: "featured_camera_exists", pass: !!SITE.featuredProject && Array.isArray(SITE.featuredProject.architecture) && SITE.featuredProject.architecture.length >= 4 },
+    { name: "featured_iot_exists", pass: !!SITE.featuredIotProject && Array.isArray(SITE.featuredIotProject.architecture) && SITE.featuredIotProject.architecture.length >= 4 },
+    { name: "featured_esp_exists", pass: !!SITE.featuredEspProject && Array.isArray(SITE.featuredEspProject.architecture) && SITE.featuredEspProject.architecture.length >= 4 },
+    {
+      name: "skill_titles",
+      pass: SITE.skills.every(function (item) {
+        return item && item.title && item.desc && Array.isArray(item.tags) && item.tags.length >= 3;
+      }),
+    },
+    {
+      name: "project_points",
+      pass: SITE.projects.every(function (item) {
+        return item && item.title && Array.isArray(item.points) && item.points.length >= 3 && Array.isArray(item.tech) && item.tech.length >= 3;
+      }),
+    },
+    {
+      name: "module_fields",
+      pass: SITE.modules.every(function (item) {
+        return item && item.title && item.type && item.desc;
+      }),
+    },
+  ];
+
+  return {
+    ok: tests.every(function (t) {
+      return t.pass;
+    }),
+    failed: tests.filter(function (t) {
+      return !t.pass;
+    }).map(function (t) {
+      return t.name;
+    }),
+  };
+}
+
+function h(type, props) {
+  var children = Array.prototype.slice.call(arguments, 2);
+  return React.createElement.apply(React, [type, props].concat(children));
+}
+
+function navLink(label, href) {
+  return h("a", { href: href, className: "text-sm text-zinc-600 transition hover:text-zinc-950" }, label);
+}
+
+function statCard(value, label, key) {
+  return h(
+    "div",
+    { key: key, className: "rounded-2xl bg-zinc-100 p-5" },
+    h("div", { className: "text-3xl font-bold text-zinc-950" }, value),
+    h("div", { className: "mt-2 text-sm text-zinc-600" }, label)
+  );
+}
+
+function tagPill(text, key) {
+  return h("span", { key: key, className: "inline-flex items-center rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-700" }, text);
+}
+
+function bulletItem(text, key) {
+  return h(
+    "div",
+    { key: key, className: "flex items-start gap-3 text-sm text-zinc-700" },
+    h("span", { className: "mt-[3px] text-zinc-500" }, "•"),
+    h("span", null, text)
+  );
+}
+
+function sectionTitle(kicker, title, desc) {
+  return h(
+    "div",
+    { className: "max-w-3xl" },
+    h("div", { className: "text-xs font-medium uppercase tracking-[0.22em] text-zinc-500" }, kicker),
+    h("h2", { className: "mt-3 text-3xl font-bold tracking-tight text-zinc-950 md:text-4xl" }, title),
+    h("p", { className: "mt-3 text-base leading-7 text-zinc-600" }, desc)
+  );
+}
+
+function infoCard(title, desc, extra, key) {
+  return h(
+    "div",
+    { key: key, className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+    h("h3", { className: "text-xl font-semibold text-zinc-950" }, title),
+    h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, desc),
+    extra || null
+  );
+}
+
+function projectDetailBlock(project, id, titleText, descText) {
+  return h(
+    "section",
+    { id: id, className: "mt-10" },
+    sectionTitle("Featured Project", titleText, descText),
+    h(
+      "div",
+      { className: "mt-8 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]" },
+      h(
+        "div",
+        { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+        h("div", { className: "inline-flex rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-700" }, project.type),
+        h("h3", { className: "mt-4 text-2xl font-semibold text-zinc-950" }, project.title),
+        h("p", { className: "mt-4 text-sm leading-7 text-zinc-600" }, project.intro),
+        h("h4", { className: "mt-6 text-lg font-semibold text-zinc-950" }, "项目背景"),
+        h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, project.background),
+        h("h4", { className: "mt-6 text-lg font-semibold text-zinc-950" }, "系统结构"),
+        h("div", { className: "mt-3 space-y-3" }, project.architecture.map(function (item, index) {
+          return bulletItem(item, id + "-arch-" + index);
+        })),
+        h("h4", { className: "mt-6 text-lg font-semibold text-zinc-950" }, "你负责的核心部分"),
+        h("div", { className: "mt-3 space-y-3" }, project.responsibilities.map(function (item, index) {
+          return bulletItem(item, id + "-resp-" + index);
+        })),
+        h("h4", { className: "mt-6 text-lg font-semibold text-zinc-950" }, "项目结果"),
+        h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, project.outcome)
+      ),
+      h(
+        "div",
+        { className: "space-y-6" },
+        h(
+          "div",
+          { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+          h("h3", { className: "text-xl font-semibold text-zinc-950" }, "关键能力体现"),
+          h("div", { className: "mt-4 flex flex-wrap gap-2" }, project.highlights.map(function (item, index) {
+            return tagPill(item, id + "-highlight-" + index);
+          }))
+        ),
+        h(
+          "div",
+          { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+          h("h3", { className: "text-xl font-semibold text-zinc-950" }, "适合继续补充的内容"),
+          h("div", { className: "mt-4 space-y-3" }, [
+            bulletItem("项目实物图 / 系统框图", id + "-next-1"),
+            bulletItem("功能流程图", id + "-next-2"),
+            bulletItem("关键代码模块说明", id + "-next-3"),
+            bulletItem("调试难点与解决过程", id + "-next-4"),
+            bulletItem("视频演示与下载入口", id + "-next-5"),
+          ])
+        )
+      )
+    )
+  );
+}
+
+export default function App() {
+  var result = runTests();
+  var featured = SITE.featuredProject;
+  var featuredIot = SITE.featuredIotProject;
+  var featuredEsp = SITE.featuredEspProject;
+
+  return h(
+    "div",
+    { className: "min-h-screen bg-zinc-50 text-zinc-950" },
+    !result.ok ? h("div", { className: "border-b border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900" }, "数据检查未通过：" + result.failed.join("；")) : null,
+    h(
+      "header",
+      { className: "sticky top-0 z-20 border-b border-zinc-200 bg-white/95 backdrop-blur" },
+      h(
+        "div",
+        { className: "mx-auto flex max-w-6xl items-center justify-between px-4 py-5" },
+        h(
+          "div",
+          { className: "flex items-center gap-3" },
+          h("div", { className: "flex h-10 w-10 items-center justify-center rounded-2xl bg-zinc-900 text-white" }, "矩"),
+          h(
+            "div",
+            null,
+            h("div", { className: "text-sm text-zinc-500" }, SITE.subtitle),
+            h("div", { className: "text-lg font-semibold" }, SITE.brand)
+          )
+        ),
+        h(
+          "nav",
+          { className: "hidden items-center gap-5 md:flex" },
+          navLink("关于我", "#about"),
+          navLink("求职信息", "#job-info"),
+          navLink("求职资料", "#resume-pack"),
+          navLink("照相机项目", "#featured-project"),
+          navLink("环境监测项目", "#featured-iot-project"),
+          navLink("ESP32 项目", "#featured-esp-project"),
+          navLink("联系我", "#contact")
+        )
+      )
+    ),
+    h(
+      "main",
+      { className: "mx-auto max-w-6xl px-4 py-10" },
+      h(
+        "section",
+        { className: "rounded-[32px] border border-zinc-200 bg-white p-8 shadow-sm md:p-12" },
+        h("div", { className: "inline-flex rounded-full border border-zinc-200 px-4 py-2 text-sm text-zinc-600" }, SITE.tagline),
+        h("h1", { className: "mt-6 max-w-4xl text-4xl font-bold leading-tight md:text-6xl" }, SITE.headline),
+        h("p", { className: "mt-6 max-w-3xl text-base leading-8 text-zinc-600 md:text-lg" }, SITE.intro),
+        h(
+          "div",
+          { className: "mt-8 flex flex-wrap gap-3" },
+          h("a", { href: "#featured-project", className: "inline-flex items-center justify-center rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-medium text-white" }, "查看精选项目"),
+          h("a", { href: "#resume-pack", className: "inline-flex items-center justify-center rounded-2xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900" }, "查看求职资料")
+        ),
+        h(
+          "div",
+          { className: "mt-8 grid gap-4 sm:grid-cols-4" },
+          [
+            statCard("0.5 年", "工程经历", "exp"),
+            statCard(String(SITE.skills.length) + "+", "能力模块", "skills"),
+            statCard(String(SITE.projects.length), "精选项目", "projects"),
+            statCard("多项", "比赛获奖", "honors"),
+          ]
+        ),
+        h("div", { className: "mt-8 rounded-3xl bg-zinc-100 p-5 text-sm leading-7 text-zinc-600" }, SITE.about)
+      ),
+      h(
+        "section",
+        { id: "about", className: "mt-10" },
+        sectionTitle("About", "关于我", "把简历信息结构化整理成网站内容，既能展示能力，也便于后续继续扩写项目与文章。"),
+        h(
+          "div",
+          { className: "mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]" },
+          h(
+            "div",
+            { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+            h("h3", { className: "text-xl font-semibold text-zinc-950" }, SITE.owner),
+            h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, "求职目标聚焦嵌入式软件方向，核心能力覆盖 MCU、ESP32、嵌入式协议、FreeRTOS、硬件调试与项目实现。"),
+            h("div", { className: "mt-5 space-y-3" }, SITE.profile.map(function (item, index) {
+              return h("div", { key: "profile-" + index, className: "rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-zinc-700" }, item);
+            }))
+          ),
+          h(
+            "div",
+            { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+            h("h3", { className: "text-xl font-semibold text-zinc-950" }, "当前重点方向"),
+            h("div", { className: "mt-4 space-y-3" }, SITE.focus.map(function (item, index) {
+              return bulletItem(item, "focus-" + index);
+            })),
+            h("h3", { className: "mt-6 text-xl font-semibold text-zinc-950" }, "实习与教育经历"),
+            h("div", { className: "mt-4 space-y-4" }, SITE.experience.map(function (item, index) {
+              return h(
+                "div",
+                { key: "experience-" + index, className: "rounded-2xl border border-zinc-200 p-4" },
+                h("div", { className: "text-sm font-medium text-zinc-500" }, item.time),
+                h("div", { className: "mt-2 text-lg font-semibold text-zinc-950" }, item.title),
+                h("p", { className: "mt-2 text-sm leading-7 text-zinc-600" }, item.desc)
+              );
+            }))
+          )
+        )
+      ),
+      h(
+        "section",
+        { id: "job-info", className: "mt-10" },
+        sectionTitle("Job Intent", "求职信息与能力概览", "这一部分让招聘方或合作方更快判断你当前的岗位方向、可做内容和可交流范围。"),
+        h(
+          "div",
+          { className: "mt-8 grid gap-6 lg:grid-cols-2" },
+          h(
+            "div",
+            { className: "space-y-6" },
+            h(
+              "div",
+              { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("h3", { className: "text-xl font-semibold text-zinc-950" }, "当前求职信息"),
+              h("div", { className: "mt-4 space-y-3" }, SITE.jobIntent.map(function (item, index) {
+                return bulletItem(item, "job-" + index);
+              }))
+            ),
+            h(
+              "div",
+              { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("h3", { className: "text-xl font-semibold text-zinc-950" }, "我现在能做什么"),
+              h("div", { className: "mt-4 space-y-3" }, SITE.canDo.map(function (item, index) {
+                return bulletItem(item, "cando-" + index);
+              }))
+            )
+          ),
+          h(
+            "div",
+            { className: "space-y-6" },
+            h(
+              "div",
+              { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("h3", { className: "text-xl font-semibold text-zinc-950" }, "岗位适配方向"),
+              h("div", { className: "mt-4 space-y-3" }, SITE.fitRoles.map(function (item, index) {
+                return bulletItem(item, "fit-" + index);
+              }))
+            ),
+            h(
+              "div",
+              { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("h3", { className: "text-xl font-semibold text-zinc-950" }, "招聘方可快速看到"),
+              h("div", { className: "mt-4 space-y-3" }, SITE.recruiterView.map(function (item, index) {
+                return bulletItem(item, "rv-" + index);
+              }))
+            )
+          )
+        )
+      ),
+      h(
+        "section",
+        { id: "resume-pack", className: "mt-10" },
+        sectionTitle("Resume Pack", "求职资料与投递入口", "把招聘方最关心的内容收在一起，网站就能从展示页升级成可直接投递的个人主页。"),
+        h(
+          "div",
+          { className: "mt-8 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]" },
+          h(
+            "div",
+            { className: "space-y-6" },
+            h(
+              "div",
+              { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("h3", { className: "text-xl font-semibold text-zinc-950" }, "求职资料包"),
+              h("div", { className: "mt-4 space-y-3" }, SITE.resumePack.map(function (item, index) {
+                return bulletItem(item, "resume-pack-" + index);
+              }))
+            ),
+            h(
+              "div",
+              { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("h3", { className: "text-xl font-semibold text-zinc-950" }, "建议投递组合"),
+              h("div", { className: "mt-4 space-y-3" }, SITE.deliveryPack.map(function (item, index) {
+                return bulletItem(item, "delivery-pack-" + index);
+              }))
+            )
+          ),
+          h(
+            "div",
+            { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+            h("h3", { className: "text-xl font-semibold text-zinc-950" }, "快速操作入口"),
+            h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, "这里后续可以接入真实的 PDF 简历下载链接、邮箱链接、GitHub 链接和作品集入口。"),
+            h(
+              "div",
+              { className: "mt-5 grid gap-3 sm:grid-cols-2" },
+              h("button", { type: "button", className: "rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-medium text-white" }, "下载 PDF 简历"),
+              h("button", { type: "button", className: "rounded-2xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900" }, "打开项目主页"),
+              h("button", { type: "button", className: "rounded-2xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900" }, "邮箱联系"),
+              h("button", { type: "button", className: "rounded-2xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900" }, "GitHub / Gitee")
+            )
+          )
+        )
+      ),
+      projectDetailBlock(featured, "featured-project", "精选项目详情｜" + featured.title, "先把一个最能体现你工程综合能力的项目展开讲清楚，网站就会更像正式作品集。"),
+      projectDetailBlock(featuredIot, "featured-iot-project", "项目详情｜" + featuredIot.title, "把第二个项目也展开，你的网站就不再只是单一案例，而会更像完整的能力展示页。"),
+      projectDetailBlock(featuredEsp, "featured-esp-project", "项目详情｜" + featuredEsp.title, "把第三个项目也展开后，网站将形成三条非常清晰的项目主线：物联网、交互终端、图像采集终端。"),
+      h(
+        "section",
+        { id: "projects", className: "mt-10" },
+        sectionTitle("Projects", "项目实战总览", "用 3 个代表性项目，把你的物联网、交互终端、图像采集与外设协同能力展示出来。"),
+        h(
+          "div",
+          { className: "mt-8 grid gap-6 lg:grid-cols-3" },
+          SITE.projects.map(function (item, index) {
+            return h(
+              "div",
+              { key: "project-" + index, className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("div", { className: "inline-flex rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-700" }, item.type),
+              h("h3", { className: "mt-4 text-xl font-semibold text-zinc-950" }, item.title),
+              h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, item.summary),
+              h("div", { className: "mt-4 space-y-2" }, item.points.map(function (point, pointIndex) {
+                return h("div", { key: "point-" + index + "-" + pointIndex, className: "flex items-center gap-2 text-sm text-zinc-600" }, h("span", null, "•"), h("span", null, point));
+              })),
+              h("div", { className: "mt-4 flex flex-wrap gap-2" }, item.tech.map(function (tech, techIndex) {
+                return tagPill(tech, "tech-" + index + "-" + techIndex);
+              }))
+            );
+          })
+        )
+      ),
+      h(
+        "section",
+        { id: "modules", className: "mt-10" },
+        sectionTitle("Circuit Modules", "常用电路模块设计库", "这里继续保留为长期建设模块，后面可以把你的硬件经验整理成真正的模块知识库。"),
+        h(
+          "div",
+          { className: "mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3" },
+          SITE.modules.map(function (item, index) {
+            return h(
+              "div",
+              { key: "module-" + index, className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("div", { className: "flex items-center justify-between gap-3" }, h("h3", { className: "text-lg font-semibold text-zinc-950" }, item.title), h("span", { className: "inline-flex rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-700" }, item.type)),
+              h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, item.desc)
+            );
+          })
+        )
+      ),
+      h(
+        "section",
+        { id: "articles", className: "mt-10" },
+        sectionTitle("Articles", "技术文章与经验复盘", "你后面可以把简历里的项目继续拆成文章、调试记录和模块专题。"),
+        h(
+          "div",
+          { className: "mt-8 grid gap-6 lg:grid-cols-2" },
+          SITE.articles.map(function (item, index) {
+            return h(
+              "div",
+              { key: "article-" + index, className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("span", { className: "inline-flex rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-700" }, item.tag),
+              h("h3", { className: "mt-4 text-xl font-semibold text-zinc-950" }, item.title),
+              h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, item.desc)
+            );
+          })
+        )
+      ),
+      h(
+        "section",
+        { id: "services", className: "mt-10" },
+        sectionTitle("Direction", "当前建设方向", "先把展示、沉淀、传播这三条线跑通，网站后面再慢慢扩成真正的个人工程生态。"),
+        h(
+          "div",
+          { className: "mt-8 grid gap-6 md:grid-cols-3" },
+          SITE.services.map(function (item, index) {
+            return infoCard(item.title, item.desc, null, "service-" + index);
+          })
+        )
+      ),
+      h(
+        "section",
+        { id: "roadmap", className: "mt-10" },
+        sectionTitle("Roadmap", "成长路线", "网站不是终点，而是你后续开源、视频、资料整理与对外合作的基础设施。"),
+        h(
+          "div",
+          { className: "mt-8 grid gap-6 md:grid-cols-2" },
+          SITE.roadmap.map(function (item, index) {
+            return h(
+              "div",
+              { key: "roadmap-" + index, className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+              h("div", { className: "flex h-10 w-10 items-center justify-center rounded-2xl bg-zinc-100 text-sm font-semibold text-zinc-900" }, String(index + 1)),
+              h("h3", { className: "mt-4 text-xl font-semibold text-zinc-950" }, item.title),
+              h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, item.desc)
+            );
+          })
+        )
+      ),
+      h(
+        "section",
+        { id: "contact", className: "mt-10" },
+        sectionTitle("Contact", "联系与合作", "联系方式先以更适合公开展示的形式呈现，后面你可以再决定是否公开手机号、微信等。"),
+        h(
+          "div",
+          { className: "mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]" },
+          h(
+            "div",
+            { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+            h("h3", { className: "text-xl font-semibold text-zinc-950" }, "欢迎交流项目、技术与合作"),
+            h("p", { className: "mt-3 text-sm leading-7 text-zinc-600" }, "这里后续可以接入邮箱、代码仓库、B站主页、服务说明和简历下载入口。"),
+            h(
+              "div",
+              { className: "mt-5 flex flex-wrap gap-3" },
+              h("button", { type: "button", className: "rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-medium text-white" }, "邮箱联系"),
+              h("button", { type: "button", className: "rounded-2xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900" }, "GitHub / Gitee"),
+              h("button", { type: "button", className: "rounded-2xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900" }, "简历下载")
+            )
+          ),
+          h(
+            "div",
+            { className: "rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm" },
+            h("h3", { className: "text-xl font-semibold text-zinc-950" }, "当前联系入口"),
+            h("div", { className: "mt-4 space-y-3" }, SITE.contact.map(function (item, index) {
+              return h("div", { key: "contact-" + index, className: "rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-zinc-700" }, item);
+            }))
+          )
+        )
+      )
+    ),
+    h(
+      "footer",
+      { className: "border-t border-zinc-200 bg-white" },
+      h(
+        "div",
+        { className: "mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-sm text-zinc-500 md:flex-row md:items-center md:justify-between" },
+        h("div", null, "© 2026 矩芯工坊 · 陈兴体的个人能力网站初版"),
+        h("div", { className: "flex flex-wrap gap-4" }, navLink("关于我", "#about"), navLink("求职信息", "#job-info"), navLink("求职资料", "#resume-pack"), navLink("照相机项目", "#featured-project"), navLink("环境监测项目", "#featured-iot-project"), navLink("ESP32 项目", "#featured-esp-project"), navLink("联系我", "#contact"))
+      )
+    )
+  );
+}
